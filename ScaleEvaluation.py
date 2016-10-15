@@ -13,11 +13,10 @@ class ScaleEvaluation(EvaluationFunction):
         key = PITCH_E
         scale = self.getMajorScaleForKey(key)
 
-        for bar in melody.bars:
-            for note in bar.notes:
-                if not note.pitch in scale:
-                    # Punish out of scale notes
-                    score += self.outOfScalePenalty
+        for note in melody.notes:
+            if not note.pitch in scale:
+                # Punish out of scale notes
+                score += self.outOfScalePenalty
 
         return score
 

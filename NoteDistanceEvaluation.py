@@ -13,21 +13,20 @@ class NoteDistanceEvaluation(EvaluationFunction):
         score = 0
 
         lastNotePitch = None
-        for bar in melody.bars:
-            for note in bar.notes:
-                currentNotePitch = note.pitch
+        for note in melody.notes:
+            currentNotePitch = note.pitch
 
-                if currentNotePitch == SILENCE or lastNotePitch == SILENCE or lastNotePitch == None:
-                    lastNotePitch = currentNotePitch
-                    continue
-
-                # TODO: Current a C and B are 11 steps apart. Octaves are NOT considered.
-                if abs(currentNotePitch - lastNotePitch) < self.minDistance:
-                    score += self.tooShortPenalty
-                elif abs(currentNotePitch - lastNotePitch) > self.maxDistance:
-                    score += self.tooLongPenalty
-
+            if currentNotePitch == SILENCE or lastNotePitch == SILENCE or lastNotePitch == None:
                 lastNotePitch = currentNotePitch
+                continue
+
+            # TODO: Current a C and B are 11 steps apart. Octaves are NOT considered.
+            if abs(currentNotePitch - lastNotePitch) < self.minDistance:
+                score += self.tooShortPenalty
+            elif abs(currentNotePitch - lastNotePitch) > self.maxDistance:
+                score += self.tooLongPenalty
+
+            lastNotePitch = currentNotePitch
 
         return score
 

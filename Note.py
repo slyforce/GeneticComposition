@@ -10,8 +10,8 @@ class Note:
         # The octave of the note
         self.octave = 0
 
-        # The length of the note. The inverse is it's representation in a 4-beat signature
-        self.length = 4
+        # The length of the note
+        self.length = DEF_TICK_STEP_SIZE
 
         # Whether the note is being played or articulated
         self.articulated = False

@@ -139,7 +139,6 @@ if __name__ == '__main__':
     model_writer.save_model(model_trainer.get_model(), target_folder + '/' + args.name)
 
     from Melody import Melody
-    from Bar import Bar
     from Note import Note
     import random
     import numpy as np
@@ -170,9 +169,7 @@ if __name__ == '__main__':
         notes.append(new_note)
         notes_features.append(feature_manager.get_feature_from_note(new_note))
 
-    bar = Bar()
-    melody.addBar(bar)
-    bar.notes = notes
+    melody.notes = notes
 
     w = MelodyWriter.MelodyWriter()
     w.writeToFile('trainingOutput.mid', melody)

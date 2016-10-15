@@ -1,7 +1,5 @@
 from defaults import *
-from keras.preprocessing import sequence as keras_sequence
 from Melody import Melody
-from Bar import Bar
 
 import numpy as np
 import copy
@@ -24,15 +22,6 @@ class NeuralFeatureManager:
             out[N_PITCHES * note.octave + note.pitch] = 1
 
         return out
-
-    def get_feature_sequence(self, melody):
-        sequence = []
-
-        for bar in melody.bars:
-            for note in bar.notes:
-                sequence.append(self.get_feature_from_note(note))
-
-        return np.array(sequence)
 
     def generate_input_from_sequence(self, note_sequence):
         X_test = np.zeros((1, self.maximum_sequence_length, self.feature_length))
@@ -59,8 +48,7 @@ class NeuralFeatureManager:
 
         notes = []
         for i, melody in enumerate(melodies):
-            for bar in melody.bars:
-                notes += bar.notes
+            notes += melody.notes
 
         X_train = np.zeros((len(notes), self.maximum_sequence_length, self.feature_length))
         y_train = np.zeros((len(notes), self.feature_length))
@@ -82,17 +70,15 @@ class NeuralFeatureManager:
         return X_train, y_train
 
 
-def split_melodies(melodies, max_number_of_bars_per_melody):
+def split_melodies(melodies, max_number_of_notes_per_melody):
     result = []
     new_melody = Melody()
     for melody in melodies:
-        print len(melody.bars)
-        for bar in melody.bars:
-            if len(new_melody.bars) < max_number_of_bars_per_melody:
-                # Still place in the melody
-                new_melody.addBar(bar)
-            else:
-                # Full melody, append it to the result
+
+        for note in melody:
+            new_melody.notes.append(note)
+
+            if len(new_melody.notes) >= max_number_of_notes_per_melody:
                 result.append(copy.copy(new_melody))
                 new_melody = Melody()
 

@@ -23,23 +23,15 @@ class MelodyGeneratorFlatline(MelodyGenerator):
         reference_note.octave = octave
 
         melody = Melody()
-        for i in range(0, DEF_NUMBER_BARS):
-            melody.bars.append(Bar())
-            for j in range(0, SHORTEST_NOTE_LENGTH * 4):
-                # Always create a new object
-                new_note = Note()
-                new_note.pitch = reference_note.pitch
-                new_note.octave = reference_note.octave
+        for j in range(0, DEF_NUMBER_NOTES):
+            # Always create a new object
+            new_note = Note()
+            new_note.pitch = reference_note.pitch
+            new_note.octave = reference_note.octave
 
-                if i != 0 and j != 0:
-                    new_note.articulated = True
+            if j != 0:
+                new_note.articulated = True
 
-                melody.bars[i].notes.append(new_note)
+            melody.notes.append(new_note)
 
-        # Save the melody as an attribute
-        self.melody = copy.copy(melody)
-
-        return self.melody
-
-    def replace(self, melody_scores_dict):
-        return melody_scores_dict
+        return melody

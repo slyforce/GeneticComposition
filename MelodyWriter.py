@@ -6,25 +6,19 @@ class MelodyWriter:
         self.tempo = DEFAULT_TEMPO
 
     def getMidiPitch(self, note):
-        #return midi.NOTE_VALUE_MAP_SHARP[note.octave * N_PITCHES + note.pitch]
         return note.octave * N_PITCHES + note.pitch
 
-    def writeToFile(self, fileName, melody, tick_step_size=int(4. / SHORTEST_NOTE_LENGTH * DEF_TICK_DURATION)):
+    def writeToFile(self, fileName, melody, tick_step_size=DEF_TICK_STEP_SIZE):
         print "Note window size:", tick_step_size
         pattern = midi.Pattern()
         track = midi.Track()
 
-        notes = []
-        for bar in melody.bars:
-            notes = notes + bar.notes
+        notes = melody.notes
 
-        nextTickDuration = 0
         nextTickStart = 0
         i = 0
         while i < len(notes):
             note = notes[i]
-            #nextTickDuration += step
-
             if note.pitch != SILENCE and note.articulated == False:
                 pitch = self.getMidiPitch(note)
                 on = midi.NoteOnEvent(tick=nextTickStart, velocity=127, pitch=pitch)

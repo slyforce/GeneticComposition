@@ -12,20 +12,19 @@ class PitchMutation(MutationFunction):
     def mutate(self, melody):
         for iter in range(0, self.number_pitch_changes):
             # Take a random note and shift it up / down
-            barIndex = random.randint(0, len(melody.bars) - 1)
-            bar = melody.bars[barIndex]
+            noteIndex = random.randint(0, len(melody.notes) - 1)
 
-            if len(bar.notes) == 0:
+            if len(melody.notes) == 0:
                 # Nothing to mutate
                 continue
-            elif len(bar.notes) == 1:
+            elif len(melody.notes) == 1:
                 # We can only mutate one note
                 noteIndex = 0
             else:
                 # Choose a random note in the bar to mutate
-                noteIndex = random.randint(0, len(bar.notes) - 1)
+                noteIndex = random.randint(0, len(melody.notes) - 1)
 
-            note = bar.notes[noteIndex]
+            note = melody.notes[noteIndex]
 
             # print "Mutating note " + str(noteIndex) + " at bar " + str(barIndex)
 

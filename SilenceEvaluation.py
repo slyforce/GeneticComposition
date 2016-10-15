@@ -7,9 +7,8 @@ class SilenceEvaluation(EvaluationFunction):
 
     def evaluate(self, melody):
         score = 0
-        for bar in melody.bars:
-            for note in bar.notes:
-                if note.pitch == SILENCE:
-                    score += self.silencePenalty
+        for note in melody.notes:
+            if note.pitch == SILENCE:
+                score += self.silencePenalty
 
         return score

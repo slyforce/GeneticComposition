@@ -10,9 +10,6 @@ class MelodyGenerator:
         raise NotImplemented
         return Melody()
 
-    def replace(self, melody_scores_dict):
-        raise NotImplemented
-        return melodies
 
 import RandomMelodyGenerator
 import MelodyGeneratorFromFile

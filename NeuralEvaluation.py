@@ -18,12 +18,9 @@ class NeuralEvaluator(EvaluationFunction):
         self.feature_manager = NeuralFeatureManager()
 
     def evaluate(self, melody):
-        notes = []
-        for bar in melody.bars:
-            notes += bar.notes
+        notes = melody.notes
 
         X_set, y_set = self.feature_manager.generate_training_data([melody])
-
         output = self.model.predict(X_set,
                                     batch_size=50,
                                     verbose=0)

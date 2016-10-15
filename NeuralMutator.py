@@ -23,7 +23,7 @@ class NeuralMutation(MutationFunction):
         self.load_model(model_path)
 
     def mutate(self, melody):
-        notes = melody.getNotes()
+        notes = melody.notes
 
         for iter in range(0, self.number_pitch_changes):
             # Pick a random note in the melody

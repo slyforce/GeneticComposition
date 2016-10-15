@@ -10,22 +10,20 @@ class NoteSwapMutation(MutationFunction):
 
      def mutate(self, melody):
         # Take a random note and shift it up / down
-        barIndex = random.randint(0, len(melody.bars) - 1)
-        bar = melody.bars[barIndex]
+        noteIndex = random.randint(0, len(melody.notes) - 1)
 
-        if len(bar.notes) == 1 or len(bar.notes) == 0:
+        if len(melody.notes) == 1 or len(melody.notes) == 0:
             # Nothing to swap
             return
-        elif len(bar.notes) == 2:
+        elif len(melody.notes) == 2:
             # We can only swap one note
             noteIndex = 0
         else:
             # Choose a random note in the bar to swap
-            noteIndex = random.randint(0, len(bar.notes) - 2)
+            noteIndex = random.randint(0, len(melody.notes) - 2)
 
-        tmpNote = bar.notes[noteIndex + 1]
-        bar.notes[noteIndex+1] = bar.notes[noteIndex]
-        bar.notes[noteIndex]   = tmpNote
+        # Swap the notes
+        melody.notes[noteIndex], melody.notes[noteIndex+1] = melody.notes[noteIndex+1], melody.notes[noteIndex]
 
 if __name__ == '__main__':
     from RandomMelodyGenerator import MelodyGenerator
