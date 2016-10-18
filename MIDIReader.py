@@ -2,7 +2,6 @@ from defaults import *
 import midi
 from Melody import Melody
 from Note import Note
-from Bar import Bar
 
 from MelodyWriter import MelodyWriter
 
