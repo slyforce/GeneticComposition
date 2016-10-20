@@ -12,6 +12,9 @@ class Melody:
         # The notes in the melody
         self.notes = []
 
+        # General information to the track stored in the MIDI file
+        self.description = ''
+
     def setKey(self, pitch):
         self.key = pitch
 
