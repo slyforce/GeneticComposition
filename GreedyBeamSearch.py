@@ -49,6 +49,10 @@ class GreedyBeamSearch:
         self.max_expansions = max_expansions
         self.beam_size = beam_size
 
+        print "Iterations: ", max_iterations
+        print "Expansions: ", max_expansions
+        print "Beam size:  ", beam_size
+
         self.mutator = Mutator()
         #self.mutator.addPitchMutation()
         #self.mutator.addNoteSwapMutation()
@@ -61,7 +65,7 @@ class GreedyBeamSearch:
         #self.evaluator.addSilenceEvaluator()
         #self.evaluator.addOnBeatEvaluation()
         #self.evaluator.addNoteDistanceEvaluation()
-        self.regularEvaluator.addNeuralEvaluation('training/model.iter10')
+        self.regularEvaluator.addNeuralEvaluation('training/model.iter200')
 
         self.melodyWriter = MelodyWriter()
 
@@ -94,7 +98,7 @@ class GreedyBeamSearch:
             del previous_beam
             previous_beam = new_beam
 
-            print previous_beam
+            #print previous_beam
 
             self.save_melody(previous_beam.get_best_melody(), i+1)
 
@@ -106,9 +110,23 @@ class GreedyBeamSearch:
 
 
 if __name__ == '__main__':
-    optimizer = GreedyBeamSearch()
+    import argparse, time
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--iterations", type=int, default=30,
+                        help="")
+    parser.add_argument("--expansions", type=int, default=5,
+                        help="")
+    parser.add_argument("--beamSize", type=int, default=10,
+                        help="")
 
-    optimizer.search()
+    args = parser.parse_args()
+    opt = GreedyBeamSearch(max_iterations=args.iterations,
+                    max_expansions=args.expansions,
+                    beam_size=args.beamSize)
+
+    start_time = time.clock()
+    opt.search()
+    print "Optimization took: %f seconds" % ((time.clock() - start_time))
 
 
 
