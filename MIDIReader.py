@@ -2,7 +2,6 @@ from defaults import *
 import midi
 from Melody import Melody
 from Note import Note
-from Bar import Bar
 
 from MelodyWriter import MelodyWriter
 
@@ -49,6 +48,8 @@ class MIDIReader:
                         # This gives us the duration of the pitch
                         tick_information.end_tick = event.tick
                         notes_played.append(tick_information)
+                elif (isinstance(event, midi.TrackNameEvent)):
+                    new_melody.description = event.text
 
             new_melody.notes = []
             last_tick = reversed(track).next().tick
@@ -85,7 +86,7 @@ class MIDIReader:
             # Check if the track is too small
             # This can be the case for description tracks
             if len(new_melody.notes) < 10:
-                print "Too short track. Ignoring it."
+                #print "Too short track. Ignoring it."
                 continue
 
             result.append(new_melody)
@@ -132,8 +133,8 @@ if __name__ == '__main__':
     song, songResolution = r.read_file('training_chromatic/mary_had_a_little_lamb.mid')
 
     print "Song has", len(song), "melodies"
-
     chosenMelody = song[0]
+    print "Melody description:", chosenMelody.description
 
     nNotes = 0
     nSilence = 0.

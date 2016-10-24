@@ -1,7 +1,6 @@
 import operator
 
 from Melody import Melody
-from Bar import Bar
 from Note import Note
 from defaults import *
 

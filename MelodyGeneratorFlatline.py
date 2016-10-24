@@ -1,4 +1,3 @@
-from Bar import Bar
 from Melody import Melody
 from Note import Note
 from defaults import *
