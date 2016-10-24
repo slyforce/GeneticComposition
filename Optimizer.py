@@ -1,7 +1,7 @@
 from MelodyWriter import MelodyWriter
 from MelodyGeneratorFactory import MelodyGeneratorFactory
 from Mutator import Mutator
-from Evaluator import Evaluator
+from EvaluatorFactory import EvaluatorFactory
 from defaults import *
 
 import operator
@@ -19,25 +19,33 @@ class Optimizer:
         self.iterations = iterations
         self.maxPopulation = population
         self.log_each_n_iterations = log_each_n_iterations
-        self.factor_of_melody_generations_per_iterations = 0.3
+        self.factor_of_melody_generations_per_iterations = 0.1
 
         self.mutator = Mutator()
-        #self.mutator.addPitchMutation()
+        self.mutator.addPitchMutation()
         #self.mutator.addNoteSwapMutation()
-        #self.mutator.addNeuralMutation(model_path='training_ironMaiden/model-300it-200h')
+        #self.mutator.addNeuralMutation(model_path='training_metallica/model')
 
-        self.evaluator = Evaluator()
-        self.evaluator.addScaleEvaluator()
+        # Evaluator that will evaluate the population in each generation
+        # Compututionally cheap fitness functions should be used for this object
+        self.regularEvaluator = EvaluatorFactory.createRegularEvaluator()
+        self.regularEvaluator.addScaleEvaluator()
         #self.evaluator.addSilenceEvaluator()
         #self.evaluator.addOnBeatEvaluation()
         #self.evaluator.addNoteDistanceEvaluation()
-        #self.evaluator.addNeuralEvaluation('training_ironMaiden/model-300it-200h')
+        #self.evaluator.addNeuralEvaluation('training_metallica/model')
+
+        # Additional evaluator that only evaluates after a certain number of calls
+        # Computationally expensive fitness functions should be called by this object
+        # TODO: don't hard code
+        self.periodicEvaluator = EvaluatorFactory.createPeriodicEvaluator(10)
+        self.periodicEvaluator.addNeuralEvaluation('training_metallica/model')
 
         self.melodyWriter = MelodyWriter()
 
-        self.melodyGenerator = MelodyGeneratorFactory.create_random_melody_generator()
-        #self.melodyGenerator = MelodyGeneratorFactory.create_file_melody_generator()
-        #self.melodyGenerator.load_from_directory('training_ironMaiden')
+        #self.melodyGenerator = MelodyGeneratorFactory.create_random_melody_generator()
+        self.melodyGenerator = MelodyGeneratorFactory.create_file_melody_generator()
+        self.melodyGenerator.load_from_directory('training_ironMaiden')
         #self.melodyGenerator = MelodyGeneratorFactory.create_flatline_melody_generator()
 
         self.bestMelody = None
@@ -58,7 +66,6 @@ class Optimizer:
 
             # Add new members to the population
             # No scores are assigned to the melodies, since they will be mutated in the next step
-            # TODO: Don't hard code stuff
             self.generatePopulation( int(self.factor_of_melody_generations_per_iterations * self.maxPopulation) )
 
             # Apply mutations
@@ -98,12 +105,24 @@ class Optimizer:
                 continue
 
             self.mutator.mutateMelody(melody)
-            self.population[melody] = self.evaluator.evaluate(melody)
+            self.population[melody] = self.regularEvaluator.evaluate(melody)
 
     def evaluatePopulation(self):
+        self.periodicEvaluator.updateCounter()
+
         for melody, score in self.population.items():
-            if score <= 0.:
-                self.population[melody] = self.evaluator.evaluate(melody)
+            new_score = self.regularEvaluator.evaluate(melody)
+
+            # Check if the period evaluator should evaluate
+            if self.periodicEvaluator.isReadyToEvaluate():
+                new_score += self.periodicEvaluator.evaluate(melody)
+
+            # Set the score of the melody
+            self.population[melody] = new_score
+
+        # Reset the counter of the periodic evaluator if it has scored
+        if self.periodicEvaluator.isReadyToEvaluate():
+            self.periodicEvaluator.iterationCounter = 0
 
     def outputBestMelody(self):
         sortedPopulation = sorted(self.population.items(), key=operator.itemgetter(1), reverse=False)
@@ -112,6 +131,9 @@ class Optimizer:
         print "Score of the best melody seen in optimization:          ", self.bestMelodyScore
         self.melodyWriter.writeToFile("best.mid", sortedPopulation[0][0])
         self.melodyWriter.writeToFile("overallBest.mid", self.bestMelody)
+
+        for note in sortedPopulation[0][0].notes:
+            print note
 
     def saveBestMelody(self):
         bestMelodyAndScore = min(self.population.iteritems(), key=operator.itemgetter(1))

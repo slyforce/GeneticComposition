@@ -52,7 +52,7 @@ class RandomMelodyGenerator(MelodyGeneratorFactory.MelodyGenerator):
 
 if __name__ == '__main__':
     mg = RandomMelodyGenerator()
-    mg.generate()
+    mg.generate
     print "Generated melody: "
     print mg.melody.getFeature()
 

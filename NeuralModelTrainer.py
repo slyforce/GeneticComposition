@@ -85,7 +85,7 @@ class NeuralModelTrainer:
             X_train = X_train[permutation, :, :]
             y_train = y_train[permutation, :]
 
-        early_stopping = EarlyStopping(monitor='val_loss', patience=10)
+        early_stopping = EarlyStopping(monitor='val_loss', patience=5)
         training_history = self.model.fit(X_train,
                   y_train,
                   validation_split=self.validation_split,
@@ -148,8 +148,8 @@ if __name__ == '__main__':
     notes = []
     notes_features = []
     start_note = Note()
-    start_note.setFromMidiPitch(random.randint(40, 80))
-    #start_note.setFromMidiPitch(55) # D4
+    # start_note.setFromMidiPitch(random.randint(40, 80))
+    start_note.setFromMidiPitch(55) # D4
 
     notes.append(start_note)
     notes_features.append(feature_manager.get_feature_from_note(start_note))
@@ -157,9 +157,9 @@ if __name__ == '__main__':
         input = feature_manager.generate_testing_data(notes)
 
         output = model_trainer.model.predict(input)
-        most_likely_output_index = np.argmax(output[0, :])
+        most_likely_output_index = np.argmax(output[-1, :])
 
-        print "Output: ", output[0,most_likely_output_index], most_likely_output_index
+        print "Output: ", output[-1,most_likely_output_index], most_likely_output_index
 
         new_note = Note()
         new_note.setFromMidiPitch(most_likely_output_index)

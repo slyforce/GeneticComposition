@@ -28,7 +28,7 @@ class NoteSwapMutation(MutationFunction):
 if __name__ == '__main__':
     from RandomMelodyGenerator import MelodyGenerator
     mg = MelodyGenerator()
-    mg.generate()
+    mg.generate
     melody = mg.melody
     print "Generated melody: "
     print melody.getFeature()

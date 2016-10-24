@@ -39,11 +39,20 @@ class NeuralMutation(MutationFunction):
 
             #print "Sum of most likely tones:", np.sum(output[0, sorted_output[0:self.sample_number]])
             # Modify the note accordingly
-            if sorted_output[sampling_idx] == N_OCTAVES * N_PITCHES + 1:
+            if sorted_output[sampling_idx] >= N_OCTAVES * N_PITCHES:
                 notes[note_index].pitch = SILENCE
                 notes[note_index].octave = 0
             else:
                 notes[note_index].setFromMidiPitch(sorted_output[sampling_idx])
+
+            if note_index == 0:
+                notes[0].articulated = False
+            else:
+                if notes[note_index-1].pitch == notes[note_index].pitch and \
+                   notes[note_index-1].octave == notes[note_index].octave:
+                    notes[note_index].articulated = True
+                else:
+                    notes[note_index].articulated = False
 
     def load_model(self, file):
         model_reader = NeuralModelReader()

@@ -9,7 +9,7 @@ class MelodyWriter:
         return note.octave * N_PITCHES + note.pitch
 
     def writeToFile(self, fileName, melody, tick_step_size=DEF_TICK_STEP_SIZE):
-        print "Note window size:", tick_step_size
+        # print "Note window size:", tick_step_size
         pattern = midi.Pattern()
         pattern.resolution = melody.tempo
 

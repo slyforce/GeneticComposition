@@ -35,4 +35,7 @@ class Note:
         return result
 
     def __str__(self):
-        return midi.NOTE_NAMES[self.pitch] + " " + str(self.octave)
+        if self.pitch == SILENCE:
+            return "S " + str(self.octave)
+        else:
+            return midi.NOTE_NAMES[self.pitch] + " " + str(self.octave)

@@ -34,7 +34,7 @@ class MIDIReader:
         for idx, track in enumerate(pattern):
             new_melody = Melody()
             new_melody.setTempo(resolution)
-            
+
             notes_played = []
             track.make_ticks_abs()
             for event in track:
@@ -129,7 +129,7 @@ class MIDIReader:
 
 if __name__ == '__main__':
     r = MIDIReader()
-    song, songResolution = r.read_file('training_metallica/killers_bass.mid')
+    song, songResolution = r.read_file('training_chromatic/mary_had_a_little_lamb.mid')
 
     print "Song has", len(song), "melodies"
 

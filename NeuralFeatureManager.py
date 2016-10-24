@@ -40,6 +40,7 @@ class NeuralFeatureManager:
                 X_test[sample_index, sequence_index - sequence_start, :] = self.get_feature_from_note(
                                                                                   note_sequence[sequence_index])
 
+
         return X_test
 
     def generate_training_data(self, melodies):
@@ -59,14 +60,16 @@ class NeuralFeatureManager:
                 X_train[sample_index, sequence_index-sequence_start, :] = self.get_feature_from_note(notes[sequence_index])
 
             y_train[sample_index, :] = self.get_feature_from_note(note)
-        '''
-        for i in range(0, len(notes)):
-            print "Sample", str(i)
-            print "X:",
-            for j in range(0, self.maximum_sequence_length):
-                print np.argmax(X_train[i, j, :]),
-            print "\ny:", np.argmax(y_train[i,:])
-        '''
+
+
+        #for i in range(0, len(notes)):
+        #    print "Sample", str(i)
+        #    print "X:",
+        #    for j in range(0, self.maximum_sequence_length):
+        #        print np.argmax(X_train[i, j, :]),
+        #    print "\ny:", np.argmax(y_train[i,:])
+
+
         return X_train, y_train
 
 
@@ -75,7 +78,7 @@ def split_melodies(melodies, max_number_of_notes_per_melody):
     new_melody = Melody()
     for melody in melodies:
 
-        for note in melody:
+        for note in melody.notes:
             new_melody.notes.append(note)
 
             if len(new_melody.notes) >= max_number_of_notes_per_melody:
