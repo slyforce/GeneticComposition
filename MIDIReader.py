@@ -98,12 +98,12 @@ class MIDIReader:
     def clean_melodies(self, melodies):
         result = []
         for melody in melodies:
-            self.remove_silence_at_start_and_end(melody)
+            self.remove_silence(melody)
             result.append(melody)
 
         return result
 
-    def remove_silence_at_start_and_end(self, melody):
+    def remove_silence(self, melody):
         junk_indices = []
 
         # Accumulate silence at the beginning of the melody
@@ -122,6 +122,24 @@ class MIDIReader:
                 break
 
         # Now remove all indices
+        # Note that the list must be reversed to be able to pop correctly
+        for i in reversed(junk_indices):
+            melody.notes.pop(i)
+
+
+        junk_indices = []
+
+        # Eliminate too long sequences of silence that would not influence the scoring
+        for i, note in enumerate(melody.notes):
+            if note.pitch == SILENCE:
+                counter += 1
+            else:
+                counter = 0
+
+            if counter >= MAXIMUM_SEQUENCE_LENGTH:
+                junk_indices.append(i)
+
+        # Now remove all indices (again)
         # Note that the list must be reversed to be able to pop correctly
         for i in reversed(junk_indices):
             melody.notes.pop(i)

@@ -22,6 +22,10 @@ class NeuralMutation(MutationFunction):
         # neural model for mutation selection
         self.load_model(model_path)
 
+        print "Neural mutation settings:"
+        print "Number of notes mutated:", self.number_pitch_changes
+        print "Range of choice:", self.sample_number
+
     def mutate(self, melody):
         notes = melody.notes
 

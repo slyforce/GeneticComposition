@@ -56,7 +56,7 @@ class GreedyBeamSearch:
         self.mutator = Mutator()
         #self.mutator.addPitchMutation()
         #self.mutator.addNoteSwapMutation()
-        self.mutator.addNeuralMutation(model_path='training/model.iter200')
+        self.mutator.addNeuralMutation(model_path='training_metallica/model.iter50')
 
         # Evaluator that will evaluate the population in each generation
         # Compututionally cheap fitness functions should be used for this object
@@ -65,7 +65,7 @@ class GreedyBeamSearch:
         #self.evaluator.addSilenceEvaluator()
         #self.evaluator.addOnBeatEvaluation()
         #self.evaluator.addNoteDistanceEvaluation()
-        self.regularEvaluator.addNeuralEvaluation('training/model.iter200')
+        self.regularEvaluator.addNeuralEvaluation('training_metallica/model.iter50')
 
         self.melodyWriter = MelodyWriter()
 

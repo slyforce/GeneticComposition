@@ -3,6 +3,8 @@ from Melody import Melody
 
 import numpy as np
 import copy
+
+
 class NeuralFeatureManager:
     def __init__(self, feature_length=N_PITCHES*N_OCTAVES+1):
 
@@ -45,7 +47,7 @@ class NeuralFeatureManager:
 
     def generate_training_data(self, melodies):
         # Avoid too long melodies by limiting the number of bars
-        # melodies = split_melodies(melodies, DEF_NUMBER_BARS)
+        # melodies = split_melodies(melodies, DEF_NUMBER_NOTES)
 
         notes = []
         for i, melody in enumerate(melodies):
@@ -71,6 +73,31 @@ class NeuralFeatureManager:
 
 
         return X_train, y_train
+
+    def generate_stateful_training_data(self, melodies):
+        # Splitting is necessary for using states in the sequence neural training
+        # Increase the maximum sequence length to include more context
+        melodies = split_melodies(melodies, MAXIMUM_SEQUENCE_LENGTH)
+
+        X_train = []
+        y_train = []
+        for melody in melodies:
+            X_train_melody, y_train_melody = self.create_stateful_data_for_melody(melody)
+            X_train.append(X_train_melody)
+            y_train.append(y_train_melody)
+
+        return X_train, y_train
+
+
+    def create_stateful_data_for_melody(self, melody):
+        X_train = np.zeros((MAXIMUM_SEQUENCE_LENGTH, 1, self.feature_length))
+        y_train = np.zeros((MAXIMUM_SEQUENCE_LENGTH, self.feature_length))
+        for i in range(1, len(melody.notes)):
+            X_train[i - 1, 0, :] = self.get_feature_from_note(melody.notes[i - 1])
+            y_train[i - 1, :] = self.get_feature_from_note(melody.notes[i])
+
+        return X_train, y_train
+
 
 
 def split_melodies(melodies, max_number_of_notes_per_melody):

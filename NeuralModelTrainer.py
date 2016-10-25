@@ -9,7 +9,6 @@ from NeuralFeatureManager import NeuralFeatureManager
 from NeuralModelReader import NeuralModelReader
 import numpy as np
 
-
 class NeuralModelTrainer:
     def __init__(self, hidden_layer_size=100, validation_split=0.1,
                  n_epochs=50, n_batches=100):
@@ -48,20 +47,11 @@ class NeuralModelTrainer:
         # The masking layer is the single most important element of the neural network
         # Without it, the weights of the padding values would also be trained
         self.model.add(Masking(mask_value=0, input_shape=(self.maximum_sequence_length, self.feature_length)))
-
-        # LSTM layer as input
-        #self.model.add(LSTM(self.hidden_layer_size,
-        #                    input_shape=(self.maximum_sequence_length, self.feature_length),
-        #                    return_sequences=True,
-        #                    unroll=False,
-        #                    consume_less='gpu'))
-        #self.model.add(Dropout(0.7))
-
         self.model.add(LSTM(self.hidden_layer_size,
                             input_shape=(self.maximum_sequence_length, self.feature_length),
                             return_sequences=False,
                             unroll=False,
-                            consume_less='gpu'))
+                            consume_less='mem'))
         self.model.add(Dropout(0.7))
 
         # Output layer
@@ -86,11 +76,13 @@ class NeuralModelTrainer:
             y_train = y_train[permutation, :]
 
         early_stopping = EarlyStopping(monitor='val_loss', patience=5)
+
         training_history = self.model.fit(X_train,
                   y_train,
                   validation_split=self.validation_split,
                   batch_size=self.n_batches,
                   nb_epoch=self.n_epochs,
+                  shuffle=shuffle,
                   callbacks=[early_stopping])
 
         if log_file != '':
@@ -120,7 +112,6 @@ if __name__ == '__main__':
     midi_reader = MIDIReader()
     feature_manager = NeuralFeatureManager()
     model_writer = NeuralModelReader()
-    model_trainer = NeuralModelTrainer(n_epochs=args.epochs)
 
     target_folder = args.directory
     melodies = []
@@ -128,15 +119,15 @@ if __name__ == '__main__':
         print "Reading:", file_name
         melodies += midi_reader.read_file(file_name)[0]
 
+    model_trainer = NeuralModelTrainer(n_epochs=args.epochs)
     X_train, y_train = feature_manager.generate_training_data(melodies)
     print "Training on %d samples" % X_train.shape[0]
-    #print X_train.shape
-    #print y_train.shape
 
     model_trainer.train_model(X_train, y_train,
                               log_file=args.trainingLog)
 
     model_writer.save_model(model_trainer.get_model(), target_folder + '/' + args.name)
+
 
     from Melody import Melody
     from Note import Note
