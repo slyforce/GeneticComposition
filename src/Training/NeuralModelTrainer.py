@@ -1,12 +1,13 @@
 from keras.callbacks import EarlyStopping
-from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Masking
 from keras.layers import LSTM
+from keras.models import Sequential
 
-from defaults import *
-from MIDIReader import MIDIReader
-from NeuralFeatureManager import NeuralFeatureManager
-from NeuralModelReader import NeuralModelReader
+from MIDIUtil.MIDIReader import MIDIReader
+from Training.NeuralFeatureManager import NeuralFeatureManager
+from Training.NeuralModelReader import NeuralModelReader
+from MIDIUtil.defaults import *
+
 import numpy as np
 
 class NeuralModelTrainer:
@@ -81,7 +82,7 @@ class NeuralModelTrainer:
                   y_train,
                   validation_split=self.validation_split,
                   batch_size=self.n_batches,
-                  nb_epoch=self.n_epochs,
+                  epochs=self.n_epochs,
                   shuffle=shuffle,
                   callbacks=[early_stopping])
 
@@ -129,11 +130,11 @@ if __name__ == '__main__':
     model_writer.save_model(model_trainer.get_model(), target_folder + '/' + args.name)
 
 
-    from Melody import Melody
+    from MIDIUtil.Melody import Melody
     from Note import Note
     import random
     import numpy as np
-    import MelodyWriter
+    from MIDIUtil import MelodyWriter
 
     melody = Melody()
     notes = []

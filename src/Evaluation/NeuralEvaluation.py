@@ -1,11 +1,8 @@
-from EvaluationFunctionInterface import EvaluationFunction
-from defaults import *
-import copy
-from NeuralModelReader import NeuralModelReader
-from NeuralFeatureManager import NeuralFeatureManager
-from keras.preprocessing import sequence as keras_sequence
-
 import numpy as np
+
+from Evaluation.EvaluationFunctionInterface import EvaluationFunction
+from Training.NeuralFeatureManager import NeuralFeatureManager
+from Training.NeuralModelReader import NeuralModelReader
 
 
 class NeuralEvaluator(EvaluationFunction):

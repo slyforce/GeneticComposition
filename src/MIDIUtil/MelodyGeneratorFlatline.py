@@ -1,13 +1,10 @@
+import random
+
+from MIDIUtil.MelodyGeneratorFactory import MelodyGenerator
 from Melody import Melody
 from Note import Note
 from defaults import *
-from MIDIReader import MIDIReader
-from MelodyGeneratorFactory import MelodyGenerator
 
-import NeuralFeatureManager
-import random
-import glob
-import copy
 
 class MelodyGeneratorFlatline(MelodyGenerator):
     def __init__(self):

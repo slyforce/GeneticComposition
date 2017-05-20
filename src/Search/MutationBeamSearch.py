@@ -1,9 +1,11 @@
-from MelodyWriter import MelodyWriter
-from MelodyGeneratorFactory import MelodyGeneratorFactory
-from Mutator import Mutator
-from EvaluatorFactory import EvaluatorFactory
+import copy
+import operator
+import os
 
-import operator, copy
+from MIDIUtil.MelodyGeneratorFactory import MelodyGeneratorFactory
+from MIDIUtil.MelodyWriter import MelodyWriter
+from Mutation.Mutator import Mutator
+from Evaluation.EvaluatorFactory import Evaluator
 
 class Beam:
     def __init__(self,
@@ -40,32 +42,34 @@ class Beam:
     def get_best_melody(self):
         return min(self.melodies_and_scores, key=operator.itemgetter(1))[0]
 
-class GreedyBeamSearch:
+class MutationBeamSearch:
     def __init__(self,
                  max_iterations=20,
                  beam_size=10,
-                 max_expansions=5):
+                 max_expansions=5,
+                 model_path='',
+                 model_evaluator_path='',
+                 output_directory=''):
         self.max_iterations = max_iterations
         self.max_expansions = max_expansions
         self.beam_size = beam_size
+        self.output_directory = output_directory
+
+        # Create output file directory if needed
+        if not os.path.isdir(self.output_directory):
+            os.makedirs(self.output_directory)
 
         print "Iterations: ", max_iterations
         print "Expansions: ", max_expansions
         print "Beam size:  ", beam_size
 
         self.mutator = Mutator()
-        #self.mutator.addPitchMutation()
+        self.mutator.addPitchMutation()
         #self.mutator.addNoteSwapMutation()
-        self.mutator.addNeuralMutation(model_path='training_metallica/model.iter50')
+        #self.mutator.addNeuralMutation(model_path=model_path)
 
-        # Evaluator that will evaluate the population in each generation
-        # Compututionally cheap fitness functions should be used for this object
-        self.regularEvaluator = EvaluatorFactory.createRegularEvaluator()
-        #self.regularEvaluator.addScaleEvaluator()
-        #self.evaluator.addSilenceEvaluator()
-        #self.evaluator.addOnBeatEvaluation()
-        #self.evaluator.addNoteDistanceEvaluation()
-        self.regularEvaluator.addNeuralEvaluation('training_metallica/model.iter50')
+        self.regularEvaluator = Evaluator()
+        self.regularEvaluator.addNeuralEvaluation(model_evaluator_path)
 
         self.melodyWriter = MelodyWriter()
 
@@ -105,7 +109,7 @@ class GreedyBeamSearch:
     def save_melody(self,
                     melody,
                     iteration):
-        filename = 'greedyBeamOutputDir/greedyBeamSearch.iter' + str(iteration) + '.mid'
+        filename = self.output_directory + '/greedyBeamSearch.iter' + str(iteration) + '.mid'
         self.melodyWriter.writeToFile(filename, melody)
 
 
@@ -120,9 +124,9 @@ if __name__ == '__main__':
                         help="")
 
     args = parser.parse_args()
-    opt = GreedyBeamSearch(max_iterations=args.iterations,
-                    max_expansions=args.expansions,
-                    beam_size=args.beamSize)
+    opt = MutationBeamSearch(max_iterations=args.iterations,
+                             max_expansions=args.expansions,
+                             beam_size=args.beamSize)
 
     start_time = time.clock()
     opt.search()

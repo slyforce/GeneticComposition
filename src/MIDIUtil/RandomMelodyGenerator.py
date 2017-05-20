@@ -1,13 +1,11 @@
-import operator
+import random
 
-from Melody import Melody
-from Note import Note
+from MIDIUtil.MelodyGeneratorFactory import MelodyGenerator
+from MIDIUtil.Melody import Melody
+from MIDIUtil.Note import Note
 from defaults import *
 
-import random
-import MelodyGeneratorFactory
-
-class RandomMelodyGenerator(MelodyGeneratorFactory.MelodyGenerator):
+class RandomMelodyGenerator(MelodyGenerator):
     def __init__(self):
         self.melody = None
 
@@ -56,7 +54,6 @@ if __name__ == '__main__':
     print mg.melody.getFeature()
 
     print len(mg.melody.getFeature())
-    import MelodyWriter
     mw = MelodyWriter.MelodyWriter()
 
     mw.writeToFile("test.mid", mg.melody)

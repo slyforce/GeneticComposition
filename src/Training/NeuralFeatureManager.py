@@ -1,8 +1,9 @@
-from defaults import *
-from Melody import Melody
+import copy
 
 import numpy as np
-import copy
+
+from MIDIUtil.Melody import Melody
+from MIDIUtil.defaults import *
 
 
 class NeuralFeatureManager:

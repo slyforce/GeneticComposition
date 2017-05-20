@@ -1,5 +1,5 @@
-from MIDIReader import MIDIReader
-from MelodyWriter import MelodyWriter
+from MIDIUtil.MIDIReader import MIDIReader
+from MIDIUtil.MelodyWriter import MelodyWriter
 
 class MIDISplitter:
     def __init__(self):

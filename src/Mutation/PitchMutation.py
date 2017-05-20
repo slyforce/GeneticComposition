@@ -1,8 +1,8 @@
-from MutationFunctionInterface import MutationFunction
-from defaults import *
-from itertools import chain
-
 import random
+
+from Mutation.MutationFunctionInterface import MutationFunction
+from MIDIUtil.defaults import *
+
 
 class PitchMutation(MutationFunction):
     def __init__(self):

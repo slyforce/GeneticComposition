@@ -1,11 +1,9 @@
-from defaults import *
 import midi
-from Melody import Melody
+
+from MIDIUtil.Melody import Melody
+from MIDIUtil.MelodyWriter import MelodyWriter
 from Note import Note
-
-from MelodyWriter import MelodyWriter
-
-import operator
+from defaults import *
 
 '''
 Helper class to store which pitch is being played a tick time interval
@@ -145,10 +143,9 @@ class MIDIReader:
             melody.notes.pop(i)
 
 
-
 if __name__ == '__main__':
     r = MIDIReader()
-    song, songResolution = r.read_file('training_chromatic/mary_had_a_little_lamb.mid')
+    song, songResolution = r.read_file('../../data/training_chromatic/mary_had_a_little_lamb.mid')
 
     print "Song has", len(song), "melodies"
     chosenMelody = song[0]
@@ -165,4 +162,4 @@ if __name__ == '__main__':
     print "Total notes", nNotes
 
     w = MelodyWriter()
-    w.writeToFile('midiReaderTest.mid', chosenMelody, tick_step_size=int(songResolution))
+    w.writeToFile('../../data/training_chromatic/midiReaderTest.mid', chosenMelody, tick_step_size=int(songResolution))

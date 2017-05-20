@@ -1,11 +1,12 @@
-from defaults import *
-from MIDIReader import MIDIReader
-from MelodyGeneratorFactory import MelodyGenerator
-
-import NeuralFeatureManager
-import random
-import glob
 import copy
+import glob
+import random
+
+from MIDIReader import MIDIReader
+from MIDIUtil.MelodyGeneratorFactory import MelodyGenerator
+from Training import NeuralFeatureManager
+from defaults import *
+
 
 class MelodyGeneratorFromFile(MelodyGenerator):
     def __init__(self):

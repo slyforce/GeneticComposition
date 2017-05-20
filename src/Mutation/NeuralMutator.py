@@ -1,11 +1,12 @@
-from MutationFunctionInterface import MutationFunction
-from defaults import *
-from itertools import chain
-
 import random
+
 import numpy as np
-from NeuralFeatureManager import NeuralFeatureManager
-from NeuralModelReader import NeuralModelReader
+
+from Mutation.MutationFunctionInterface import MutationFunction
+from Training.NeuralFeatureManager import NeuralFeatureManager
+from Training.NeuralModelReader import NeuralModelReader
+from MIDIUtil.defaults import *
+
 
 class NeuralMutation(MutationFunction):
     def __init__(self, model_path=''):

@@ -11,9 +11,9 @@ class MelodyGenerator:
         return Melody()
 
 
-import RandomMelodyGenerator
-import MelodyGeneratorFromFile
 import MelodyGeneratorFlatline
+import MelodyGeneratorFromFile
+import RandomMelodyGenerator
 
 class MelodyGeneratorFactory:
     @staticmethod

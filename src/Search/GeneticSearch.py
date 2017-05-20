@@ -1,13 +1,11 @@
-from MelodyWriter import MelodyWriter
-from MelodyGeneratorFactory import MelodyGeneratorFactory
-from Mutator import Mutator
-from EvaluatorFactory import EvaluatorFactory
-from defaults import *
-
+import copy
 import operator
 import time
-import numpy as np
-import copy
+
+from Evaluation.EvaluatorFactory import EvaluatorFactory
+from MIDIUtil.MelodyGeneratorFactory import MelodyGeneratorFactory
+from MIDIUtil.MelodyWriter import MelodyWriter
+from Mutation.Mutator import Mutator
 
 
 class Optimizer:
