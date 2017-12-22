@@ -12,11 +12,11 @@ parser.add_argument("--expansions", type=int, default=5,
                     help="")
 parser.add_argument("--beamSize", type=int, default=10,
                     help="")
-parser.add_argument("--modelPath", type=str,
+parser.add_argument("--modelPath", type=str, default='',
                     help="directory path with midi files to train a net")
-parser.add_argument("--evaluatorModelPath", type=str,
+parser.add_argument("--evaluatorModelPath", type=str, default='',
                     help="directory path with midi files to train a net")
-parser.add_argument("--outputDirectory", type=str,
+parser.add_argument("--outputDirectory", type=str, default='',
                     help="directory path with midi files to train a net")
 
 args = parser.parse_args()

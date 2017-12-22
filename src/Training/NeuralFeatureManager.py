@@ -4,6 +4,7 @@ import numpy as np
 
 from MIDIUtil.Melody import Melody
 from MIDIUtil.defaults import *
+from MIDIUtil.Note import SilenceNote, Note
 
 
 class NeuralFeatureManager:
@@ -45,6 +46,76 @@ class NeuralFeatureManager:
 
 
         return X_test
+
+    def generate_sequential_training_data(self, melodies, debug=False):
+        notes = []
+        for i, melody in enumerate(melodies):
+            notes += melody.notes
+
+        sample_size = int(np.ceil( float(len(notes)) / MAXIMUM_SEQUENCE_LENGTH))
+        X_train = [ [] for _ in xrange(0, sample_size)]
+        y_train = [ [] for _ in xrange(0, sample_size)]
+
+        for i in xrange(0, sample_size):
+            for j in xrange(0, MAXIMUM_SEQUENCE_LENGTH-1):
+                try:
+                    prev_note = notes[i * MAXIMUM_SEQUENCE_LENGTH + j]
+                    note = notes[i * MAXIMUM_SEQUENCE_LENGTH + j + 1]
+
+                    X_train[i].append(self.get_feature_from_note(prev_note))
+                    y_train[i].append(self.get_feature_from_note(note))
+                except:
+                    X_train[i].append(np.zeros(self.feature_length))
+                    y_train[i].append(np.zeros(self.feature_length))
+
+            try:
+                final_note = notes[(i+1) * MAXIMUM_SEQUENCE_LENGTH]
+                silence = SilenceNote()
+                X_train[i].append(self.get_feature_from_note(final_note))
+                y_train[i].append(self.get_feature_from_note(silence))
+            except:
+                X_train[i].append(np.zeros(self.feature_length))
+                y_train[i].append(np.zeros(self.feature_length))
+
+        X_train = np.array(X_train)
+        y_train = np.array(y_train)
+
+        assert(X_train.shape == y_train.shape)
+
+        if debug == True:
+            print ""
+            print "Training content"
+            n_silence, n_total = 0, 0
+            for i in xrange(0, X_train.shape[0]):
+                for j in xrange(0, X_train.shape[1]):
+                    note = Note(np.argmax(X_train[i, j, :]))
+
+                    if X_train[i, j, :].sum() == 0:
+                        print "*MASK*",
+                    else:
+                        print str(note),
+
+                    if note.getPitch() == SILENCE:
+                        n_silence += 1
+
+                    n_total += 1
+
+            print "Silence vs. non-silence", n_silence, n_total
+
+            print ""
+            print "Labels content"
+            for i in xrange(0, y_train.shape[0]):
+                for j in xrange(0, y_train.shape[1]):
+                    note = Note(np.argmax(y_train[i, j, :]))
+                    if y_train[i, j, :].sum() == 0:
+                        print "*MASK*",
+                    else:
+                        print str(note),
+
+
+            print X_train.shape, y_train.shape
+        return X_train, y_train
+
 
     def generate_training_data(self, melodies):
         # Avoid too long melodies by limiting the number of bars

@@ -3,12 +3,15 @@ import numpy as np
 import midi
 
 class Note:
-    def __init__(self):
-        # The pitch of the note
-        self.pitch = PITCH_C
+    def __init__(self, midiPitch=None):
 
-        # The octave of the note
-        self.octave = 0
+        if midiPitch is None:
+            # The pitch of the note
+            self.pitch = PITCH_C
+            # The octave of the note
+            self.octave = 0
+        else:
+            self.setFromMidiPitch(midiPitch)
 
         # The length of the note
         self.length = DEF_TICK_STEP_SIZE
@@ -17,8 +20,18 @@ class Note:
         self.articulated = False
 
     def setFromMidiPitch(self, midiPitch):
-        self.octave = midiPitch / N_PITCHES
-        self.pitch = midiPitch % N_PITCHES
+        if midiPitch == 120:
+            self.octave = 0
+            self.pitch = SILENCE
+        else:
+            self.octave = midiPitch / N_PITCHES
+            self.pitch = midiPitch % N_PITCHES
+
+    def getMIDIIndex(self):
+        if self.pitch == SILENCE:
+            return N_PITCHES * N_OCTAVES
+        else:
+            return self.octave * N_PITCHES + self.pitch
 
     def getLength(self):
         return self.length
@@ -36,6 +49,12 @@ class Note:
 
     def __str__(self):
         if self.pitch == SILENCE:
-            return "S " + str(self.octave)
+            return "S_" + str(self.octave)
         else:
-            return midi.NOTE_NAMES[self.pitch] + " " + str(self.octave)
+            return midi.NOTE_NAMES[self.pitch] + "_" + str(self.octave)
+
+class SilenceNote(Note):
+    def __init__(self):
+        Note.__init__(self)
+        self.octave = 0
+        self.pitch = SILENCE

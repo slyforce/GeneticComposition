@@ -39,7 +39,7 @@ for file_name in glob.glob(target_folder + "/*.mid"):
     melodies += midi_reader.read_file(file_name)[0]
 
 model_trainer = NeuralModelTrainer(n_epochs=args.epochs)
-X_train, y_train = feature_manager.generate_training_data(melodies)
+X_train, y_train = feature_manager.generate_sequential_training_data(melodies)
 print "Training on %d samples" % X_train.shape[0]
 if X_train.shape[0] == 0:
     raise ValueError, "Training set empty"
@@ -52,7 +52,7 @@ model_writer.save_model(model_trainer.get_model(),
 
 print "#####################################"
 print "Producing samples from trained model:"
-opt = MutationBeamSearch(max_iterations=10,
+opt = MutationBeamSearch(max_iterations=5,
                        max_expansions=5,
                        beam_size=10,
                        model_path=target_folder + '/' + args.name,

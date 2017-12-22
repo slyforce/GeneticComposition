@@ -11,6 +11,13 @@ class Evaluator:
 
         return score
 
+    def evaluate_batch(self, melodies):
+        score = 0.
+        for evaluator in self.evaluators:
+            score += evaluator.evaluate_batch(melodies)
+
+        return score
+
     def addNeuralEvaluation(self, path):
         self.evaluators.append(NeuralEvaluator(path))
 

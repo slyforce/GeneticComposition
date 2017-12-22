@@ -110,29 +110,8 @@ class MutationBeamSearch:
                     melody,
                     iteration):
         filename = self.output_directory + '/greedyBeamSearch.iter' + str(iteration) + '.mid'
+        print [str(note) for note in melody.notes]
         self.melodyWriter.writeToFile(filename, melody)
-
-
-if __name__ == '__main__':
-    import argparse, time
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--iterations", type=int, default=30,
-                        help="")
-    parser.add_argument("--expansions", type=int, default=5,
-                        help="")
-    parser.add_argument("--beamSize", type=int, default=10,
-                        help="")
-
-    args = parser.parse_args()
-    opt = MutationBeamSearch(max_iterations=args.iterations,
-                             max_expansions=args.expansions,
-                             beam_size=args.beamSize)
-
-    start_time = time.clock()
-    opt.search()
-    print "Optimization took: %f seconds" % ((time.clock() - start_time))
-
-
 
 
 

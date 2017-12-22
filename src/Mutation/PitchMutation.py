@@ -36,6 +36,20 @@ class PitchMutation(MutationFunction):
                 if note.octave == N_OCTAVES:
                     note.octave -= 1
 
+
+            # Determine articulation of note
+            if noteIndex == 0:
+                note.articulated = False
+            else:
+                prevNote = melody.notes[noteIndex-1]
+
+                if prevNote == note:
+                    # TODO: Do not randomly decide to articulate or not
+                    note.articulated = bool(random.getrandbits(1))
+                else:
+                    # Never articulate when there's a note change
+                    note.articulated = False
+
     def getNoteIndex(self, melody):
         noteIndex = random.randint(0, len(melody.notes) - 1)
         if len(melody.notes) == 0:

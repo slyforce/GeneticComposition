@@ -20,6 +20,7 @@ class MelodyWriter:
         i = 0
         while i < len(notes):
             note = notes[i]
+
             if note.pitch != SILENCE and note.articulated == False:
                 pitch = self.getMidiPitch(note)
                 on = midi.NoteOnEvent(tick=nextTickStart, velocity=127, pitch=pitch)
