@@ -36,3 +36,14 @@ class Melody:
         assert(len(result) != 0)
 
         return result
+
+    def articulate_notes(self):
+        self.notes[0].articulated = False
+        for i in range(1, len(self.notes)):
+            prev_note = self.notes[i-1]
+            cur_note = self.notes[i]
+
+            if prev_note.getMIDIIndex() == cur_note.getMIDIIndex():
+                cur_note.articulated = True
+            else:
+                cur_note.articulated = False

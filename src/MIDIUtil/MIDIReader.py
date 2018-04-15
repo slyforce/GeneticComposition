@@ -142,10 +142,10 @@ class MIDIReader:
         for i in reversed(junk_indices):
             melody.notes.pop(i)
 
-
 if __name__ == '__main__':
     r = MIDIReader()
-    song, songResolution = r.read_file('/home/slyforce/src/GeneticComposition/data/training_test/mary_had_a_little_lamb.mid')
+    song, songResolution = r.read_file('/home/miguel/src/GeneticComposition/data/training_test/mary_had_a_little_lamb'
+                                       '.mid')
 
     print "Song has", len(song), "melodies"
     chosenMelody = song[0]
@@ -162,4 +162,4 @@ if __name__ == '__main__':
     print "Total notes", nNotes
 
     w = MelodyWriter()
-    w.writeToFile('/home/slyforce/src/GeneticComposition/data/training_test/mary_had_a_little_lamb_afterRead.mid', chosenMelody, tick_step_size=int(songResolution))
+    w.writeToFile('/home/miguel/src/GeneticComposition/data/training_test/mary_had_a_little_lamb_afterRead.mid', chosenMelody, tick_step_size=int(songResolution))

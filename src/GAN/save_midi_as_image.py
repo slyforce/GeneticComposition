@@ -1,14 +1,20 @@
 from MIDIUtil.Melody import Melody
 from MIDIUtil.Note import Note
+from MIDIUtil.MIDIReader import MIDIReader
+
+from utils import save_image
+
 import numpy as np
 
-def save_output_to_file(self, output, filename):
-    melody = Melody()
-    for i in range(0, output.shape[0]):
-        note = Note(midiPitch=np.argmax(output[i, :]))
-        melody.notes.append(note)
+reader = MIDIReader()
+melody = reader.read_file('/home/miguel/src/GeneticComposition/data/training_test/mary_had_a_little_lamb.mid')[0][0]
 
-    self.midi_writer.writeToFile(filename, melody)
+image = np.zeros((len(melody.notes), 129), dtype=np.int32)
+for i, note in enumerate(melody.notes):
+  image[i, note.getMIDIIndex()] = 1
 
+image = image.T
+
+save_image(image, '/home/miguel/src/GeneticComposition/data/training_test/mary_had_a_little_lamb.png')
 
 

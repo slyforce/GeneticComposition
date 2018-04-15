@@ -17,7 +17,7 @@ class Note:
         self.length = DEF_TICK_STEP_SIZE
 
         # Whether the note is being played or articulated
-        self.articulated = False
+        self.articulated = True
 
     def setFromMidiPitch(self, midiPitch):
         if midiPitch == 120:
@@ -52,6 +52,9 @@ class Note:
             return "S_" + str(self.octave)
         else:
             return midi.NOTE_NAMES[self.pitch] + "_" + str(self.octave)
+
+    def isSilence(self):
+        return self.pitch == SILENCE
 
 class SilenceNote(Note):
     def __init__(self):

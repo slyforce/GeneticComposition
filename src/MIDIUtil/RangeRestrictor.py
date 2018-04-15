@@ -4,7 +4,13 @@ from Note import Note, SilenceNote
 from defaults import MIDI_GUITAR_BEGIN, MIDI_GUITAR_END
 from defaults import MIDI_BASS_BEGIN, MIDI_BASS_END
 
+from defaults import N_FEATURES_WITHOUT_SILENCE
+
 class RangeRestrictor:
+  def __init__(self):
+    self._range_begin = 0
+    self._range_end = N_FEATURES_WITHOUT_SILENCE
+
   def restrict(self, melody):
     '''
     Restrict the notes in a melody to be between an implemented range.
@@ -25,22 +31,24 @@ class RangeRestrictor:
 
     return new_melody
 
+  def get_range_length(self):
+    return self._range_end - self._range_begin + 1
+
   def in_range(self, pitch):
-    raise NotImplementedError
+    if self._range_begin <= pitch and pitch <= self._range_end:
+      return True
+
+    return False
 
 class GuitarRangeRestrictor(RangeRestrictor):
-  def in_range(self, pitch):
-    if MIDI_GUITAR_BEGIN <= pitch and pitch <= MIDI_GUITAR_END:
-      return True
-
-    return False
+  def __init__(self):
+    self._range_begin = MIDI_GUITAR_BEGIN
+    self._range_end = MIDI_GUITAR_END
 
 class BassRangeRestrictor(RangeRestrictor):
-  def in_range(self, pitch):
-    if MIDI_BASS_BEGIN <= pitch and pitch <= MIDI_BASS_END:
-      return True
-
-    return False
+  def __init__(self):
+    self._range_begin = MIDI_BASS_BEGIN
+    self._range_end = MIDI_BASS_END
 
 if __name__ == '__main__':
   melody = Melody()

@@ -21,11 +21,13 @@ net_arg.add_argument('--debug', type=str2bool, default=False)
 
 # Data
 data_arg = add_argument_group('Data')
-data_arg.add_argument('--dataset', type=str, default='/home/slyforce/src/GeneticComposition/data/training_test')
-data_arg.add_argument('--batch_size', type=int, default=3)
+data_arg.add_argument('--dataset', type=str, default='/home/miguel/src/GeneticComposition/data/training_test')
+data_arg.add_argument('--batch_size', type=int, default=1)
 data_arg.add_argument('--height', type=int, default=50)
 data_arg.add_argument('--width', type=int, default=50)
 data_arg.add_argument('--channels', type=int, default=3)
+data_arg.add_argument('--restrict', type=str, default='guitar')
+data_arg.add_argument('--use_cgan', type=str2bool, default=True)
 
 # Training / test parameters
 train_arg = add_argument_group('Training')
@@ -42,7 +44,7 @@ train_arg.add_argument('--use_gpu', type=str2bool, default=True)
 # Misc
 misc_arg = add_argument_group('Misc')
 misc_arg.add_argument('--load_path', type=str, default='')
-misc_arg.add_argument('--log_step', type=int, default=100)
+misc_arg.add_argument('--log_step', type=int, default=200)
 misc_arg.add_argument('--save_step', type=int, default=5000)
 misc_arg.add_argument('--log_dir', type=str, default='logs')
 misc_arg.add_argument('--sample_dir', type=str, default='samples')

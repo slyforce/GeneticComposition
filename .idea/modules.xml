@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/GeneticComposition.iml" filepath="$PROJECT_DIR$/.idea/GeneticComposition.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../mnist-gan/.idea/mnist-gan.iml" filepath="$PROJECT_DIR$/../mnist-gan/.idea/mnist-gan.iml" />
     </modules>
   </component>
 </project>
